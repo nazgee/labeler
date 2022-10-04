@@ -1,4 +1,5 @@
 import io
+import csv
 import re
 from svglib import svglib
 from reportlab.graphics.shapes import Drawing
@@ -53,11 +54,16 @@ class SprayRegion(EnumeratedRegion):
 
 
 class WaterRegion(EnumeratedRegion):
-    def __init__(self, days: range, x: float, y: float):
-        self.days = days
-        if days.stop <= 7:
+    def __init__(self, days: str, x: float, y: float):
+        day_values = re.split(' - |-|, | |,|\n', days)
+        if len(day_values) == 1:
+            self.days = range(int(day_values[0]))
+        else:
+            self.days = range(int(day_values[0]), int(day_values[1]))
+
+        if self.days.stop <= 7:
             super(WaterRegion, self).__init__("level3", "./img/water/", x, y)
-        elif days.stop <= 14:
+        elif self.days.stop <= 14:
             super(WaterRegion, self).__init__("level2", "./img/water/", x, y)
         else:
             super(WaterRegion, self).__init__("level1", "./img/water/", x, y)
@@ -77,10 +83,15 @@ class WaterRegion(EnumeratedRegion):
 
 class FertilizerRegion(EnumeratedRegion):
     def __init__(self, days: range, x: float, y: float):
-        self.days = days
-        if days.stop <= 7:
+        day_values = re.split(' - |-|, | |,|\n', days)
+        if len(day_values) == 1:
+            self.days = range(int(day_values[0]))
+        else:
+            self.days = range(int(day_values[0]), int(day_values[1]))
+
+        if self.days.stop <= 7:
             super(FertilizerRegion, self).__init__("level3", "./img/fertilizer/", x, y)
-        elif days.stop <= 14:
+        elif self.days.stop <= 14:
             super(FertilizerRegion, self).__init__("level2", "./img/fertilizer/", x, y)
         else:
             super(FertilizerRegion, self).__init__("level1", "./img/fertilizer/", x, y)
@@ -166,8 +177,9 @@ class PhRegion(Region):
 
 
 class Labeler:
-    def __init__(self, light: str, shade: str, spray: str, water: range, fertilizer: range, toxic: str, temperature: str, humidity: str, ph: str):
+    def __init__(self, name: str, light: str, shade: str, spray: str, water: range, fertilizer: range, toxic: str, temperature: str, humidity: str, ph: str):
         self.regions = []
+        self.name = name
         self.regions.append(LightRegion(light, 0, 20))
         self.regions.append(WaterRegion(water, 20, 20))
         self.regions.append(TemperaturRegion(temperature, 38, 20))
@@ -178,18 +190,19 @@ class Labeler:
         self.regions.append(FertilizerRegion(fertilizer, 40, 0))
         self.regions.append(ToxicRegion(toxic, 60, 0))
 
-    def build(self, filename: str, name: str = "jakis kwiatek sobie costam"):
+    def build(self):
+        filename = "labels/" + self.name.replace(" ", "_") + ".svg"
         print("building " + filename + "...")
 
         d = Drawing(80 * mm, 47 * mm)
 
         for r in self.regions:
-            # print("adding " + r.get_file_name() + " at (" + str(r.get_x()) + ", " + str(r.get_y()) + ")")
+            print("adding " + r.get_file_name() + " at (" + str(r.get_x()) + ", " + str(r.get_y()) + ")")
             svg = r.get_svg()
             svg.translate(r.get_x() * mm, r.get_y() * mm)
             d.add(svg)
 
-        txt = svglib.String(1 * mm, 42 * mm, name, fontSize=15)
+        txt = svglib.String(1 * mm, 42 * mm, self.name, fontSize=15)
         d.add(txt)
 
         s = io.StringIO()
@@ -202,19 +215,22 @@ class Labeler:
 
 
 if __name__ == '__main__':
-    labels = [
-        Labeler(light="moderate", shade="direct", spray="yes", water=range(3), fertilizer=range(14), toxic="no",temperature="warm", humidity="moderate", ph="acidic"),
-        Labeler(light="moderate", shade="direct", spray="yes", water=range(3), fertilizer=range(14), toxic="no", temperature="warm", humidity="moderate", ph="acidic, neutral"),
-        Labeler(light="bright", shade="indirect", spray="yes", water=range(7), fertilizer=range(7), toxic="low", temperature="warm", humidity="low", ph="neutral"),
-        Labeler(light="low", shade="indirect", spray="no", water=range(10, 14), fertilizer=range(7, 14), toxic="moderate", temperature="moderate", humidity="high", ph="alkaline, neutral"),
-        Labeler(light="low", shade="indirect", spray="no", water=range(10, 14), fertilizer=range(7, 14), toxic="moderate", temperature="moderate", humidity="high", ph="alkaline"),
-        Labeler(light="low", shade="direct", spray="no", water=range(14, 21), fertilizer=range(28), toxic="high", temperature="cold", humidity="high", ph="6.2-6.5"),
-        Labeler(light="low", shade="direct", spray="no", water=range(14, 21), fertilizer=range(28), toxic="high",temperature="cold", humidity="high", ph="6.2 - 6.5"),
-        Labeler(light="low", shade="direct", spray="no", water=range(14, 21), fertilizer=range(28), toxic="high", temperature="cold", humidity="high", ph="7.5"),
-        Labeler(light="low", shade="direct", spray="no", water=range(14, 21), fertilizer=range(28), toxic="high", temperature="cold", humidity="high", ph="7.9")
-    ]
+    labels = []
+    with open('flowers.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            labels.append(Labeler(name=row['name'],
+                                  light=row['light'],
+                                  shade=row['shade'],
+                                  spray=row['spray'],
+                                  water=row['water'],
+                                  fertilizer=row['fertilizer'],
+                                  toxic=row['toxic'],
+                                  temperature=row['temperature'],
+                                  humidity=row['humidity'],
+                                  ph=row['ph']))
 
     i = 0
     for label in labels:
         i = i+1
-        label.build("labels/label" + str(i) + ".svg")
+        label.build()

@@ -1,0 +1,21 @@
+#,name,light,shade,water,winter_water,soil,spray,humidity,temperature,fertilizer,toxic,ph
+1,monstera deliciosa,bright,indirect,4-7,21,?,yes,high,warm,21,moderate,?
+2,philodendron imperial green,moderate,indirect,4-7,14,moist,no,high,warm,28,high,?
+3,coffea arabica,bright,indirect,3-4,7,moist,yes,high,warm,21,moderate,acidic
+4,epipremnum aureum,bright,indirect,4-7,?,?,yes,high,warm,28,high,6.1 - 6.5
+5,yucca,bright,indirect,7,21,"well drained, sandy",no,low,warm,28,high,6.2
+6,areca palm,bright,direct,7,?,"well drained, moist",yes,high,moderate,21,no,"acidic, neutral"
+7,senecio rowleyanus,bright,direct,14,?,"well drained, sandy",no,low,warm,14,moderate,"acidic, neutral"
+8,begonia polka dot,bright,indirect,4-7,?,"well drained, moist",yes,high,moderate,14,moderate,"acidic, neutral"
+9,mi amigo,bright,indirect,14,?,moist,yes,high,warm,30,low,4.5 - 5.6
+10,zamioculcas zamiifolia,low,indirect,14,?,well drained,no,moderate,moderate,42,moderate,"acidic, neutral"
+11,anthurium,moderate,indirect,7,?,"well drained, moist",yes,high,warm,7-14,low,acidic
+12,haworthia attenuata,bright,direct,14,?,"well drained, sandy",no,low,warm,28,no,neutral
+13,schefflera arboricola,bright,indirect,7,?,"well drained, rich",yes,high,warm,7,low,6.0 - 6.5
+14,musa tropicana,bright,direct,1-4,?,well drained. loamy,yes,high,warm,5-7,no,acidic
+15,cocos nucifera,bright,direct,3-5,?,"well drained, loamy",yes,high,warm,5-7,no,5.0 - 8.0
+16,calathea makoyana,moderate,indirect,4-7,7-10,"well drained, moist",yes,high,warm,14,no,"acidic, neutral"
+17,capsicum annuum,bright,direct,5-8,?,"rich, loamy",no,low,warm,42,no,6.0 - 6.8
+18,calathea zebrina,moderate,indirect,4-7,7-10,"well drained, moist",yes,high,warm,14,no,"acidic, neutral"
+19,maranta leuconeura,moderate,indirect,4-7,?,"well drained, moist",yes,high,warm,14,no,"acidic, neutral"
+20,mammillaria,bright,direct,10,28,"well drained, sandy",no,low,warm,42,no,"acidic, neutral"
